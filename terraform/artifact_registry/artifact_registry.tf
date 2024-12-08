@@ -1,4 +1,4 @@
-resource "google_artifact_registry_repository" "mycloudrun-registry-docker" {
+resource "google_artifact_registry_repository" "mycloudrun-repo" {
   location          = "us-central1" 
   repository_id     = "mycloudrun-registry-docker" 
   format            = "DOCKER"
