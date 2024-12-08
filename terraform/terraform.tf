@@ -23,16 +23,3 @@ resource "google_cloud_run_v2_service" "default" {
     }
   }
 }
-
-resource "google_artifact_registry_repository" "docker_repo" {
-  location          = "us-central1" # Replace with your desired region
-  repository_id     = "mycloudrun-registry-docker" # Replace with your desired repository name
-  format            = "DOCKER"
-
-  cleanup_policies {
-    id = "keep only 1 image"
-    most_recent_versions {
-      keep_count = 1
-    }
-  }
-}
