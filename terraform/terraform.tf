@@ -6,10 +6,12 @@ resource "google_cloud_run_service" "my_service" {
     spec {
       containers {
         image = "gcr.io/my-project-id/my-image:tag"
+        ports {
+          container_port = 8080 
+        }
         readiness_probe {
           http_get {
             path = "/testing"
-            port = 8080
           }
           initial_delay_seconds = 5
         }
