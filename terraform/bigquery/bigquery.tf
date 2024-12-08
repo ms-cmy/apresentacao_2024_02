@@ -3,7 +3,7 @@ resource "google_pubsub_topic" "default" {
 }
 
 resource "google_bigquery_table" "default" {
-  dataset_id = "titanic-results"
+  dataset_id = "titanic_results"
   table_id   = "titanic"
 
   schema = <<EOF
@@ -28,7 +28,7 @@ EOF
 }
 
 resource "google_pubsub_subscription" "default" {
-  name  = "your-subscription-name"
+  name  = "publish to bigquery titanic"
   topic = google_pubsub_topic.default.name
 
   bigquery_config {
