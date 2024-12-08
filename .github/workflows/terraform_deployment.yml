@@ -6,7 +6,7 @@ on:
 jobs:
   deploy-artifact-registry:
       runs-on: ubuntu-latest
-      if: contains(github.event.head_commit.modified, 'terraform/artifact_registry/**')
+      if: contains(github.event.head_commit.modified, 'terraform/artifact_registry/artifact_registry.tf')
     
       steps:
         - name: Checkout the repository to the runner
