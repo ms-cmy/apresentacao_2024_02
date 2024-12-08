@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction</title>
+</head>
+<body>
+    <h1>Resultado:</h1> 
+
+    {% if prediction == 1 %}
+        <p style="color:green;">Ufa, tinha espaço nos barcos salva-vidas <b>sobreviveu</b>.</p>
+    {% elif prediction == 0 %}
+        <p style="color:red;">Ihh, não teria sobrevivido! <b>não sobreviveu...</b>.</p>
+    {% else %}
+        <p>Algo deu errado!</p> 
+    {% endif %}
+
+    <a href="/">
+        <button>Tentar novamente?</button>
+    </a>
+</body>
+</html>
