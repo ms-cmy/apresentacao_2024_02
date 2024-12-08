@@ -91,7 +91,7 @@ resource "google_cloud_run_v2_service" "default" {
     }
   }
 
-resource "google_iam_policy" "noauth" {
+data "google_iam_policy" "noauth" {
   binding {
     role = "roles/run.invoker"
     members = [
