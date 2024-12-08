@@ -31,7 +31,6 @@ jobs:
           continue-on-error: true 
         - name: terraform apply
           working-directory: terraform/artifact_registry
-          if: steps.plan.outcome == 'failure' 
           run: terraform apply -input=false -auto-approve plan.tfplan
   
   deploy-docker-to-registry:
@@ -83,5 +82,4 @@ jobs:
         continue-on-error: true 
       - name: terraform apply
         working-directory: terraform/bigquery
-        if: steps.plan.outcome == 'failure' 
         run: terraform apply -input=false -auto-approve plan.tfplan
