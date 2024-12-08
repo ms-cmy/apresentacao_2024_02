@@ -37,6 +37,7 @@ jobs:
   deploy-docker-to-registry:
       needs: deploy-artifact-registry
       runs-on: ubuntu-latest
+      if: contains(github.event.head_commit.modified, 'dockerfile')
 
       steps:
         - name: Checkout the repository to the runner
