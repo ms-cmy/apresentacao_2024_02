@@ -82,7 +82,7 @@ jobs:
         run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
         continue-on-error: true 
       - name: terraform apply
-        if: steps.plan.outputs.exit-code == '2'
+        if: needs.plan.outputs.exit-code == '2'
         working-directory: terraform/bigquery/bq
         run: terraform apply -input=false -auto-approve plan.tfplan
 
@@ -112,7 +112,7 @@ jobs:
         run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
         continue-on-error: true 
       - name: terraform apply
-        if: steps.plan.outputs.exit-code == '2'
+        if: needs.plan.outputs.exit-code == '2'
         working-directory: terraform/bigquery/pubsub
         run: terraform apply -input=false -auto-approve plan.tfplan
       

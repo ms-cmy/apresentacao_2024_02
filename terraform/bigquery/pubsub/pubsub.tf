@@ -7,7 +7,7 @@ resource "google_pubsub_subscription" "default" {
   topic = google_pubsub_topic.default.name
 
   bigquery_config {
-    table = "${google_bigquery_table.default.dataset_id}.${google_bigquery_table.default.table_id}"
+    table = "titanic_results.titanic"
     # use_topic_schema = true  
     write_metadata = true    
   }
