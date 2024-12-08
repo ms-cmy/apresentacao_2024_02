@@ -89,6 +89,9 @@ resource "google_cloud_run_v2_service" "default" {
       image = "gcr.io/google-samples/hello-app:2.0"
       }
     }
+  lifecycle {
+    ignore_changes = [ template[0].containers[0].image ]
+  }
   }
 
 data "google_iam_policy" "noauth" {
@@ -103,5 +106,5 @@ data "google_iam_policy" "noauth" {
 resource "google_cloud_run_v2_service_iam_policy" "noauth" {
   name = google_cloud_run_v2_service.default.name
   policy_data = data.google_iam_policy.noauth.policy_data
-  project = google_cloud_run_v2_service.default.project
+  project = var.project_id
 }
