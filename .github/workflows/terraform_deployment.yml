@@ -27,7 +27,7 @@ jobs:
         - name: terraform plan
           working-directory: terraform/artifact_registry
           id: plan
-          run: terraform plan -out=plan.tfplan -input=false
+          run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
           continue-on-error: true 
         - name: terraform apply
           if: steps.plan.outputs.terraform_exitcode == '2'
@@ -79,7 +79,7 @@ jobs:
       - name: terraform plan
         working-directory: terraform/bigquery
         id: plan
-        run: terraform plan -out=plan.tfplan -input=false
+        run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
         continue-on-error: true 
       - name: terraform apply
         if: steps.plan.outputs.terraform_exitcode == '2'
