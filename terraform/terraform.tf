@@ -1,26 +1,21 @@
-resource "google_cloud_run_service" "my_service" {
-  name     = "my-service"
+resource "google_cloud_run_v2_service" "default" {
+  name     = "cloudrun-service"
   location = "us-central1"
+  deletion_protection = false
+  ingress = "INGRESS_TRAFFIC_ALL"
 
   template {
-    spec {
-      containers {
-        image = "gcr.io/my-project-id/my-image:tag"
-        ports {
-          container_port = 8080 
+    containers {
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+      startup_probe {
+        initial_delay_seconds = 5
+        tcp_socket {
+          port = 8080
         }
-        readiness_probe {
-          http_get {
-            path = "/testing"
-          }
-          initial_delay_seconds = 5
+        http_get {
+          path = "/health"
         }
       }
     }
-  }
-
-  traffic {
-    percent         = 100
-    latest_revision = true
   }
 }
