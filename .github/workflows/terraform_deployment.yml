@@ -27,5 +27,5 @@ jobs:
         run: | 
           cd terraform
           terraform init
-          terraform plan
-          terraform validade
+          terraform plan -out
+          terraform validate
