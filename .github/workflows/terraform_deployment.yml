@@ -6,6 +6,7 @@ on:
 jobs:
   deploy-artifact-registry:
       runs-on: ubuntu-latest
+      if: contains(github.event.head_commit.modified, 'terraform/artifact_registry/')
     
       steps:
         - name: Checkout the repository to the runner
@@ -22,17 +23,10 @@ jobs:
         - name: terraform init
           working-directory: terraform/artifact_registry
           run: | 
-            terraform init -input=false
+            terraform init
             terraform validate
-        - name: terraform plan
-          working-directory: terraform/artifact_registry
-          id: plan
-          run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
-          continue-on-error: true 
-        - name: terraform apply
-          if: steps.plan.outputs.exit-code == '2'
-          working-directory: terraform/artifact_registry
-          run: terraform apply -input=false -auto-approve plan.tfplan
+            terraform plan
+            terraform apply -auto-approve
   
   deploy-docker-to-registry:
       needs: deploy-artifact-registry
@@ -58,6 +52,7 @@ jobs:
           run: docker push us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-registry-docker/model_api:latest
   deploy-bq:
     runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'terraform/bigquery/bq')
     
     steps:
       - name: Checkout the repository to the runner
@@ -76,18 +71,12 @@ jobs:
         run: | 
           terraform init -input=false
           terraform validate
-      - name: terraform plan
-        working-directory: terraform/bigquery/bq
-        id: plan
-        run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
-        continue-on-error: true 
-      - name: terraform apply
-        if: needs.plan.outputs.exit-code == '2'
-        working-directory: terraform/bigquery/bq
-        run: terraform apply -input=false -auto-approve plan.tfplan
+          terraform plan
+          terraform apply -auto-approve
 
   deploy-pubsub:
     runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'terraform/bigquery/pubsub')
     
     steps:
       - name: Checkout the repository to the runner
@@ -106,13 +95,6 @@ jobs:
         run: | 
           terraform init -input=false
           terraform validate
-      - name: terraform plan
-        working-directory: terraform/bigquery/pubsub
-        id: plan
-        run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
-        continue-on-error: true 
-      - name: terraform apply
-        if: needs.plan.outputs.exit-code == '2'
-        working-directory: terraform/bigquery/pubsub
-        run: terraform apply -input=false -auto-approve plan.tfplan
+          terraform plan
+          terraform apply -auto-approve
       
