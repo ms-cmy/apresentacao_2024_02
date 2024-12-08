@@ -27,6 +27,7 @@ jobs:
             terraform validate
             terraform apply -auto-approve
   deploy-docker-to-registry:
+      needs: deploy-artifact-registry
       runs-on: ubuntu-latest
 
       steps:
