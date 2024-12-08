@@ -2,8 +2,8 @@ name: Terraform deployment
 on:
   push:
     branches: [ "master" ]
-    paths: 
-      - 'terraform/**'
+    # paths: 
+    #   - 'terraform/**'
 
 jobs:
 
