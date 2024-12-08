@@ -78,6 +78,7 @@ resource "google_cloud_run_v2_service" "default" {
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
   depends_on = [ google_artifact_registry_repository.mycloudrun-repo ]
+  project = var.project_id
 
   template {
     scaling {
