@@ -6,7 +6,7 @@ on:
 env:
   TF_CLOUD_ORGANIZATION: "app.terraform.io"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
-  TF_WORKSPACE: "mine22"
+  TF_WORKSPACE: "deploy_example"
 
 jobs:
   terraform-apply:
@@ -20,8 +20,6 @@ jobs:
           uses: hashicorp/setup-terraform@v2
           with:
             cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-            TF_WORKSPACE: ${{ env.TF_WORKSPACE }}
-            TF_CLOUD_ORGANIZATION: ${{ env.TF_CLOUD_ORGANIZATION }}
         
         - name: auth to google
           uses: 'google-github-actions/auth@v2'
@@ -34,7 +32,7 @@ jobs:
             terraform init
             terraform validate
             terraform plan
-            # terraform apply -auto-approve
+            terraform apply -auto-approve
 
   deploy-docker-to-registry:
       needs: terraform-apply

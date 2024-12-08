@@ -2,9 +2,6 @@ terraform {
   backend "remote" {
     hostname = "app.terraform.io" 
     organization = "mine22"
-    workspaces {
-      name = "deploy_example" 
-    }
   }
 }
 
