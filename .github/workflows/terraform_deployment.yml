@@ -22,10 +22,11 @@ jobs:
         - name: terraform init
           run: | 
             cd terraform/artifact_registry
-            terraform init
-            terraform plan
-            terraform validate
-            terraform apply -auto-approve
+             terraform init -input=false
+             terraform validate
+             terraform plan -out=plan.tfplan -input=false
+             terraform apply -input=false -auto-approve plan.tfplan
+
   deploy-docker-to-registry:
       needs: deploy-artifact-registry
       runs-on: ubuntu-latest
