@@ -1,0 +1,31 @@
+name: Terraform deployment
+# depois adicionar filtro para modificar somente quando for deployment no terraform
+# para fazer deploy exclusivo em terraform.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v2
+  
+      - name: Setup Terraform with specified version on the runner
+        uses: hashicorp/setup-terraform@v2
+      
+      - name: auth to google
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+      
+      - name: terraform init
+        run: | 
+        cd terraform
+        terraform init
