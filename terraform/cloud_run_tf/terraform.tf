@@ -3,7 +3,7 @@ terraform {
     hostname = "app.terraform.io" 
     organization = "mine22"
     workspaces {
-      name = "deploy_example" 
+      prefix = "deploy_example" 
     }
   }
 }
