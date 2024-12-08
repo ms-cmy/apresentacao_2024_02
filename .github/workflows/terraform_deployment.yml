@@ -43,7 +43,7 @@ jobs:
           run: gcloud auth configure-docker us-central1-docker.pkg.dev --project silicon-garage-438603-m6
     
         - name: Build the Docker image
-          run: docker build . --file dockerfile --tag us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-repo/model_api:latest
+          run: docker build . --file dockerfile --tag us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-registry-docker/model_api:latest
         
         - name: Run shell script
-          run: docker push us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-repo/model_api:latest
+          run: docker push us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-registry-docker/model_api:latest
