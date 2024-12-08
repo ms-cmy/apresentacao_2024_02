@@ -86,7 +86,7 @@ resource "google_cloud_run_v2_service" "default" {
     }
     max_instance_request_concurrency = 40
     containers {
-      image = "gcr.io/google-samples/hello-app"
+      image = "gcr.io/google-samples/hello-app:2.0"
       }
     }
   }
