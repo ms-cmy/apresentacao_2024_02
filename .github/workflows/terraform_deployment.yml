@@ -4,9 +4,8 @@ on:
     branches: [ "master" ]
 
 jobs:
-  deploy-artifact-registry:
+  terraform-apply:
       runs-on: ubuntu-latest
-      if: contains(github.event.head_commit.modified, 'terraform/artifact_registry/artifact_registry.tf')
     
       steps:
         - name: Checkout the repository to the runner
@@ -21,15 +20,15 @@ jobs:
             credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
         
         - name: terraform init
-          working-directory: terraform/artifact_registry
+          working-directory: terraform/
           run: | 
             terraform init
             terraform validate
             terraform plan
             terraform apply -auto-approve
-  
+
   deploy-docker-to-registry:
-      needs: deploy-artifact-registry
+      needs: terraform-apply
       runs-on: ubuntu-latest
       if: (contains(github.event.head_commit.modified, 'dockerfile') || contains(github.event.head_commit.modified, 'requirements.txt') || contains(github.event.head_commit.modified, 'app/**'))
 
@@ -50,51 +49,99 @@ jobs:
         
         - name: Run shell script
           run: docker push us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-registry-docker/model_api:latest
-  deploy-bq:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'terraform/bigquery/bq/**')
-    
-    steps:
-      - name: Checkout the repository to the runner
-        uses: actions/checkout@v2
-  
-      - name: Setup Terraform with specified version on the runner
-        uses: hashicorp/setup-terraform@v2
-      
-      - name: auth to google
-        uses: 'google-github-actions/auth@v2'
-        with:
-          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
-      
-      - name: terraform init
-        working-directory: terraform/bigquery/bq
-        run: | 
-          terraform init -input=false
-          terraform validate
-          terraform plan
-          terraform apply -auto-approve
 
-  deploy-pubsub:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'terraform/bigquery/pubsub/**')
+# jobs:
+#   deploy-artifact-registry:
+#       runs-on: ubuntu-latest
+#       if: contains(github.event.head_commit.modified, 'terraform/artifact_registry/artifact_registry.tf')
     
-    steps:
-      - name: Checkout the repository to the runner
-        uses: actions/checkout@v2
+#       steps:
+#         - name: Checkout the repository to the runner
+#           uses: actions/checkout@v2
+    
+#         - name: Setup Terraform with specified version on the runner
+#           uses: hashicorp/setup-terraform@v2
+        
+#         - name: auth to google
+#           uses: 'google-github-actions/auth@v2'
+#           with:
+#             credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+        
+#         - name: terraform init
+#           working-directory: terraform/artifact_registry
+#           run: | 
+#             terraform init
+#             terraform validate
+#             terraform plan
+#             terraform apply -auto-approve
   
-      - name: Setup Terraform with specified version on the runner
-        uses: hashicorp/setup-terraform@v2
+#   deploy-docker-to-registry:
+#       needs: deploy-artifact-registry
+#       runs-on: ubuntu-latest
+#       if: (contains(github.event.head_commit.modified, 'dockerfile') || contains(github.event.head_commit.modified, 'requirements.txt') || contains(github.event.head_commit.modified, 'app/**'))
+
+#       steps:
+#         - name: Checkout the repository to the runner
+#           uses: actions/checkout@v2
+        
+#         - name: auth to google
+#           uses: 'google-github-actions/auth@v2'
+#           with:
+#             credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+        
+#         - name: auth to google docker
+#           run: gcloud auth configure-docker us-central1-docker.pkg.dev --project silicon-garage-438603-m6
+    
+#         - name: Build the Docker image
+#           run: docker build . --file dockerfile --tag us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-registry-docker/model_api:latest
+        
+#         - name: Run shell script
+#           run: docker push us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-registry-docker/model_api:latest
+#   deploy-bq:
+#     runs-on: ubuntu-latest
+#     if: contains(github.event.head_commit.modified, 'terraform/bigquery/bq/**')
+    
+#     steps:
+#       - name: Checkout the repository to the runner
+#         uses: actions/checkout@v2
+  
+#       - name: Setup Terraform with specified version on the runner
+#         uses: hashicorp/setup-terraform@v2
       
-      - name: auth to google
-        uses: 'google-github-actions/auth@v2'
-        with:
-          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+#       - name: auth to google
+#         uses: 'google-github-actions/auth@v2'
+#         with:
+#           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
       
-      - name: terraform init
-        working-directory: terraform/bigquery/pubsub
-        run: | 
-          terraform init -input=false
-          terraform validate
-          terraform plan
-          terraform apply -auto-approve
+#       - name: terraform init
+#         working-directory: terraform/bigquery/bq
+#         run: | 
+#           terraform init -input=false
+#           terraform validate
+#           terraform plan
+#           terraform apply -auto-approve
+
+#   deploy-pubsub:
+#     runs-on: ubuntu-latest
+#     if: contains(github.event.head_commit.modified, 'terraform/bigquery/pubsub/**')
+    
+#     steps:
+#       - name: Checkout the repository to the runner
+#         uses: actions/checkout@v2
+  
+#       - name: Setup Terraform with specified version on the runner
+#         uses: hashicorp/setup-terraform@v2
+      
+#       - name: auth to google
+#         uses: 'google-github-actions/auth@v2'
+#         with:
+#           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+      
+#       - name: terraform init
+#         working-directory: terraform/bigquery/pubsub
+#         run: | 
+#           terraform init -input=false
+#           terraform validate
+#           terraform plan
+#           terraform apply -auto-approve
       
