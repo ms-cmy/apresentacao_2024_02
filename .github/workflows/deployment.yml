@@ -36,6 +36,7 @@ jobs:
 
   deploy-docker-to-registry:
     runs-on: ubuntu-latest
+    needs: terraform-apply
     steps:
       - name: Checkout the repository to the runner
         uses: actions/checkout@v2
@@ -56,6 +57,7 @@ jobs:
 
   cloud-run-deployment:
     runs-on: ubuntu-latest
+    needs: deploy-docker-to-registry
     steps:
       - name: Checkout the repository to the runner
         uses: actions/checkout@v2
