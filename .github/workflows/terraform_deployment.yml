@@ -6,7 +6,7 @@ on:
 jobs:
   deploy-artifact-registry:
       runs-on: ubuntu-latest
-      if: contains(github.event.head_commit.modified, 'terraform/artifact_registry/')
+      if: contains(github.event.head_commit.modified, 'terraform/artifact_registry/**')
     
       steps:
         - name: Checkout the repository to the runner
@@ -31,7 +31,7 @@ jobs:
   deploy-docker-to-registry:
       needs: deploy-artifact-registry
       runs-on: ubuntu-latest
-      if: (contains(github.event.head_commit.modified, 'dockerfile') || contains(github.event.head_commit.modified, 'requirements.txt') || contains(github.event.head_commit.modified, 'app/'))
+      if: (contains(github.event.head_commit.modified, 'dockerfile') || contains(github.event.head_commit.modified, 'requirements.txt') || contains(github.event.head_commit.modified, 'app/**'))
 
       steps:
         - name: Checkout the repository to the runner
@@ -52,7 +52,7 @@ jobs:
           run: docker push us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-registry-docker/model_api:latest
   deploy-bq:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'terraform/bigquery/bq')
+    if: contains(github.event.head_commit.modified, 'terraform/bigquery/bq/**')
     
     steps:
       - name: Checkout the repository to the runner
@@ -76,7 +76,7 @@ jobs:
 
   deploy-pubsub:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'terraform/bigquery/pubsub')
+    if: contains(github.event.head_commit.modified, 'terraform/bigquery/pubsub/**')
     
     steps:
       - name: Checkout the repository to the runner
