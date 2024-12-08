@@ -103,7 +103,7 @@ data "google_iam_policy" "noauth" {
   }
 }
 
-resource "google_cloud_run_v2_service_iam_policy" "noauth" {
+resource "google_cloud_run_v2_service_iam_policy" "cloud_run" {
   name = google_cloud_run_v2_service.default.name
   policy_data = data.google_iam_policy.noauth.policy_data
   project = var.project_id
