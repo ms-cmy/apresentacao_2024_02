@@ -20,6 +20,8 @@ jobs:
           uses: hashicorp/setup-terraform@v2
           with:
             cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+            TF_WORKSPACE: ${{ env.TF_WORKSPACE }}
+            TF_CLOUD_ORGANIZATION: ${{ env.TF_CLOUD_ORGANIZATION }}
         
         - name: auth to google
           uses: 'google-github-actions/auth@v2'
