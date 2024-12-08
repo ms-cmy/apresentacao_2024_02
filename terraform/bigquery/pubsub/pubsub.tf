@@ -12,4 +12,3 @@ resource "google_pubsub_subscription" "default" {
     write_metadata = true    
   }
 }
-
