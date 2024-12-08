@@ -37,7 +37,7 @@ jobs:
   deploy-docker-to-registry:
       needs: deploy-artifact-registry
       runs-on: ubuntu-latest
-      if: contains(github.event.head_commit.modified, 'dockerfile')
+      if: (contains(github.event.head_commit.modified, 'dockerfile') || contains(github.event.head_commit.modified, 'requirements.txt') || contains(github.event.head_commit.modified, 'app/'))
 
       steps:
         - name: Checkout the repository to the runner
