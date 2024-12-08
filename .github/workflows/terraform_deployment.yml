@@ -30,7 +30,7 @@ jobs:
           run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
           continue-on-error: true 
         - name: terraform apply
-          if: steps.plan.outcome == 'success'
+          if: steps.plan.outputs.exit-code == '2'
           working-directory: terraform/artifact_registry
           run: terraform apply -input=false -auto-approve plan.tfplan
   
@@ -56,7 +56,7 @@ jobs:
         
         - name: Run shell script
           run: docker push us-central1-docker.pkg.dev/silicon-garage-438603-m6/mycloudrun-registry-docker/model_api:latest
-  deploy-bq-and-pubsub:
+  deploy-bq:
     runs-on: ubuntu-latest
     
     steps:
@@ -72,16 +72,47 @@ jobs:
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
       
       - name: terraform init
-        working-directory: terraform/bigquery
+        working-directory: terraform/bigquery/bq
         run: | 
           terraform init -input=false
           terraform validate
       - name: terraform plan
-        working-directory: terraform/bigquery
+        working-directory: terraform/bigquery/bq
         id: plan
         run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
         continue-on-error: true 
       - name: terraform apply
-        if: steps.plan.outcome == 'success'
-        working-directory: terraform/bigquery
+        if: steps.plan.outputs.exit-code == '2'
+        working-directory: terraform/bigquery/bq
         run: terraform apply -input=false -auto-approve plan.tfplan
+
+  deploy-pubsub:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v2
+  
+      - name: Setup Terraform with specified version on the runner
+        uses: hashicorp/setup-terraform@v2
+      
+      - name: auth to google
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+      
+      - name: terraform init
+        working-directory: terraform/bigquery/pubsub
+        run: | 
+          terraform init -input=false
+          terraform validate
+      - name: terraform plan
+        working-directory: terraform/bigquery/pubsub
+        id: plan
+        run: terraform plan -out=plan.tfplan -input=false -detailed-exitcode
+        continue-on-error: true 
+      - name: terraform apply
+        if: steps.plan.outputs.exit-code == '2'
+        working-directory: terraform/bigquery/pubsub
+        run: terraform apply -input=false -auto-approve plan.tfplan
+      
