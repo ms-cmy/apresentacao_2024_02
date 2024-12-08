@@ -1,12 +1,12 @@
-# terraform {
-#   backend "remote" {
-#     hostname = "app.terraform.io" 
-#     organization = "mine22"
-#     workspaces {
-#       prefix = "deploy_example" 
-#     }
-#   }
-# }
+terraform {
+  backend "remote" {
+    hostname = "app.terraform.io" 
+    organization = "mine22"
+    workspaces {
+      prefix = "deploy_example" 
+    }
+  }
+}
 
 resource "google_artifact_registry_repository" "mycloudrun-repo" {
   location          = "us-central1" 
