@@ -1,9 +1,0 @@
-name: Orchestrate Deployments
-
-on:
-  push:
-    branches: [ "master" ]
-
-jobs:
-    deploy-terraform:
-        uses: ./.github/workflows/terraform_deployment.yml
