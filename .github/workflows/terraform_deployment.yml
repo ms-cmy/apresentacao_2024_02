@@ -20,17 +20,20 @@ jobs:
             credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
         
         - name: terraform init
+          working-directory: terraform/artifact_registry # Changed line
           run: | 
-            cd terraform/artifact_registry
             terraform init -input=false
             terraform validate
         - name: terraform plan
+          working-directory: terraform/artifact_registry # Changed line
           id: plan
           run: terraform plan -out=plan.tfplan -input=false
           continue-on-error: true 
         - name: terraform apply
+          working-directory: terraform/artifact_registry # Changed line
           if: steps.plan.outcome == 'failure' 
           run: terraform apply -input=false -auto-approve plan.tfplan
+  
   deploy-docker-to-registry:
       needs: deploy-artifact-registry
       runs-on: ubuntu-latest
