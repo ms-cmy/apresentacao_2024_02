@@ -27,5 +27,5 @@ jobs:
       
       - name: terraform init
         run: | 
-        cd terraform
-        terraform init
+          cd terraform
+          terraform init
