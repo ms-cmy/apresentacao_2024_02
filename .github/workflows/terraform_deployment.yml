@@ -30,6 +30,7 @@ jobs:
           run: terraform plan -out=plan.tfplan -input=false
           continue-on-error: true 
         - name: terraform apply
+          if: steps.plan.outputs.terraform_exitcode == '2'
           working-directory: terraform/artifact_registry
           run: terraform apply -input=false -auto-approve plan.tfplan
   
@@ -81,5 +82,6 @@ jobs:
         run: terraform plan -out=plan.tfplan -input=false
         continue-on-error: true 
       - name: terraform apply
+        if: steps.plan.outputs.terraform_exitcode == '2'
         working-directory: terraform/bigquery
         run: terraform apply -input=false -auto-approve plan.tfplan
