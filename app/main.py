@@ -17,6 +17,12 @@ model = joblib.load(bytes_container)
 
 pub_sub_client = pubsub_v1.PublisherClient()
 
+# def send_pubsub(data):
+#     topic_path = pub_sub_client.topic_path('gcp_project_id', 'topic_name')
+#     data = data.encode('utf-8')
+#     future = pub_sub_client.publish(topic_path, data)
+#     return future.result()
+
 @app.route('/health')
 def health():
     return 'OK'
@@ -27,7 +33,6 @@ def predict():
     age = int(request.form.get('age', 25)) if request.form.get('age') != '' else 25
     sex = request.form['sex'] 
     alone = int(request.form['alone'])
-    print(fare, age,)
     new_data = pd.DataFrame([[sex, fare, age, alone]], columns=['sex', 'fare', 'age', 'alone'])
     output = model.predict(new_data)[0]
     return render_template('result.html', prediction=int(output))
