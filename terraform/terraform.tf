@@ -33,6 +33,7 @@ resource "google_bigquery_table" "default" {
   table_id   = "titanic"
   depends_on = [ google_bigquery_dataset.default ]
   deletion_protection = false
+  project = var.project_id
 
   schema = <<EOF
 [
@@ -66,6 +67,7 @@ resource "google_pubsub_subscription" "default" {
   name  = "publish_to_bigquery_titanic"
   topic = google_pubsub_topic.default.id
   depends_on = [ google_pubsub_topic.default, google_bigquery_table.default ]
+  project = var.project_id
   
   bigquery_config {
     table = "${var.project_id}.titanic_results.titanic" 
