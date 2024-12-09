@@ -12,6 +12,7 @@ resource "google_artifact_registry_repository" "mycloudrun-repo" {
   location          = "us-central1" 
   repository_id     = "mycloudrun-registry-docker" 
   format            = "DOCKER"
+  project = var.project_id
 
   cleanup_policies {
     id = "keep-only-one-image"
@@ -24,6 +25,7 @@ resource "google_artifact_registry_repository" "mycloudrun-repo" {
 
 resource "google_bigquery_dataset" "default" {
   dataset_id = "titanic_results"
+  project = var.project_id
 }
 
 resource "google_bigquery_table" "default" {
