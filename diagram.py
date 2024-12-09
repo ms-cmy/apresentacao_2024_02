@@ -1,4 +1,4 @@
-from diagrams import Diagram, Edge, Cluster
+from diagrams import Diagram, Edge
 from diagrams.gcp.analytics import Bigquery, Pubsub
 from diagrams.gcp.compute import Run
 from diagrams.gcp.storage import Storage
@@ -10,39 +10,44 @@ from diagrams.gcp.devtools import ContainerRegistry, Code
 from diagrams.onprem.container import Docker
 
 
-with Diagram("Arquitetura", direction="LR") as diag:
-    user = User("Eu")
-    outro_user = User("Outro usuário")
-    git = Github("Github")
-    bigquery = Bigquery("BigQuery")
-    actions = GithubActions("Actions step 1")
-    actions_step_2 = GithubActions("Actions step 2/3")
+with Diagram("Arquitetura - Primeira parte - Life cycle do código", direction="LR") as diag:    
+    user = User("Usuário")
     code = Code("Código")
-    docker = Docker("Docker")
-    terraform = Terraform("")
-    docker_registry = ContainerRegistry("Docker")
+    git = Github("Github")
     cloud_run = Run("Cloud Run")
-    modelo = Storage("Modelo")
-    pubsub = Pubsub("PubSub")
+    actions_step_2 = GithubActions("Github Actions (2/3)")
+    terraform = Terraform("")
+    actions = GithubActions("Github Actions")
+    user >> code >> git >> actions
+    actions >> terraform >> cloud_run
+    terraform >> Pubsub("Pubsub")
+    terraform >> Edge(label="Deploy da infraestrutura") >> Bigquery("Bigquery")
+    terraform >> ContainerRegistry("Storage")
+    actions >> actions_step_2
+
+
+with Diagram("Arquitetura - Segunda parte - Deploy da aplicação", direction="LR") as diag:    
+    user = User("Usuário")
+    code = Code("Código")
+    git = Github("Github")
+    cloud_run = Run("Cloud Run")
+    docker = Docker("Docker")
+    actions_step_2 = GithubActions("Github Actions (2/3)")
     
-    with Cluster("Life cycle (ciclo de vída) do código"):
-        user >> code >> git >> actions
-        actions >> actions_step_2 >> docker >> Edge(label="Imagem") >> docker_registry
-        docker_registry >> Edge(label="Imagem") >> cloud_run
+    user >> code >> git >> actions_step_2 >> docker >> ContainerRegistry("Container registry") >> cloud_run
     
-    with Cluster("Infraestrutura"):
-        actions >> terraform
-        terraform >> Edge(label="Criação da cloud run") >> cloud_run
-        terraform >> Edge(label="Criação do docker registry") >> docker_registry
-        terraform >> Edge(label="Criação do pubsub") >> pubsub
-        terraform >> Edge(label="Criação do bigquery") >> bigquery
+    cloud_run << Edge(label="Pega o nosso modelo de ML") << Storage("Storage")
+    cloud_run >> Edge(label="Salva os dados no Bigquery") >> Pubsub("Pub sub") >> Bigquery("Bigquery")
+
+
+with Diagram("Experiência do usuário", direction="LR") as diag:
+    user = User("Usuário")
+    cloud_run = Run("Cloud Run")
+    bq = Bigquery("Bigquery")
     
-    with Cluster("Experiencia do usuário"):
-        outro_user >> Edge(label="Chamada para o modelo") >> cloud_run >> Edge(label="Resultado") >> outro_user
-    # actions >> docker
-    # actions >> cloud_run
+    user >> Edge(label="Requisição '/'") >> cloud_run
+    user >> Edge(label="Requisição '/predict'") >> cloud_run
+    cloud_run >> Edge(label="Retorna a previsão") >> user
+    cloud_run >> Edge(label="Salva os dados no Bigquery") >> bq
     
-    # modelo >> cloud_run 
-    # outro_user >> Edge(label="Chamada para o modelo") >> cloud_run >> Edge(label="Resultado") >> outro_user
-    # cloud_run >> pubsub >> bigquery
     
