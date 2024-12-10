@@ -37,7 +37,7 @@ jobs:
   deploy-docker-to-registry:
     runs-on: ubuntu-latest
     needs: terraform-apply
-    if: ! contains(github.event.head_commit.message, 'terraform destroy')
+    if: ${{ ! contains(github.event.head_commit.message, 'terraform destroy') }}
     steps:
       - name: Checkout the repository to the runner
         uses: actions/checkout@v2
@@ -72,7 +72,7 @@ jobs:
   cloud-run-deployment:
     runs-on: ubuntu-latest
     needs: deploy-docker-to-registry
-    if: ! contains(github.event.head_commit.message, 'terraform destroy')
+    if: ${{ ! contains(github.event.head_commit.message, 'terraform destroy') }}
     steps:
       - name: Checkout the repository to the runner
         uses: actions/checkout@v2
