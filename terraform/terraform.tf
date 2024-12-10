@@ -99,10 +99,11 @@ resource "google_cloud_run_v2_service" "cloud_run" {
 }
 
 
-resource "google_cloud_run_service_iam_member" "member" {
+resource "google_cloud_run_v2_service_iam_member" "member" {
+  name = google_cloud_run_v2_service.cloud_run.name
   location = google_cloud_run_v2_service.cloud_run.location
   project  = google_cloud_run_v2_service.cloud_run.project
-  service  = google_cloud_run_v2_service.cloud_run.name
-  role     = "roles/run.invoker"
-  member   = "allUsers"
+  depends_on = [google_cloud_run_v2_service.cloud_run]
+  role = "roles/run.invoker"
+  member = "allUsers"
 }
